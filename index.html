@@ -128,7 +128,7 @@ var svg = d3.select("body").append("svg")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
-d3.csv("iris.csv", function(error, data) {
+d3.csv("https://raw.githubusercontent.com/frankt86/frankt86.github.io/blob/master/iris.csv", function(error, data) {
   data.forEach(function(d) {
     d.petalLength = +d.petalLength;
     d.petalWidth = +d.petalWidth;
