@@ -91,7 +91,7 @@ d3.csv("owid-covid-data.csv", function(data) {
   }
   var mousemove = function(d) {
     Tooltip
-      .html("There are a Total of : " + d.total_cases + " Cases and " + d.total_cases+ " Total Population. ")
+      .html("There are a Total of : " + d.total_cases + " Cases and " + d.population + " Total Population. ")
 
       .style("left", (d3.mouse(this)[0]+70) + "px")
       .style("top", (d3.mouse(this)[1]) + "px")
