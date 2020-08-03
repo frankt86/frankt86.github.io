@@ -91,6 +91,23 @@
         .style("opacity", 0)
     }
 
+      svg.append("line")
+      .style("stroke", "black")
+      .style("stroke-width", 2)
+      .style("stroke-dasharray", "5,5")
+      .attr("x1", 121.5)
+      .attr("y1", 0)
+      .attr("x2", 121.5)
+      .attr("y2", 380);
+    //Label Trend line
+    svg.append("text")
+      .attr("transform",
+            "translate(" + (200) + " ," + (350) + ")")
+      .style("text-anchor", "middle")
+      .style("stroke", "Black")
+      .style("font-size", ".8em")
+      .text("Mexico's 11% Fatality Rate");
+    
     svg.append('g')
       .selectAll("dot")
       .data(data.filter(function(d,i){return i<5000000}))
