@@ -20,7 +20,7 @@ main {
 }
 
 aside {
-  grid-column: span 2;
+  grid-column: span 1;
 }
 
 @media (max-width: 700px) {
@@ -32,9 +32,6 @@ aside {
   
 }
 
-
-
-/* Demo Specific Styles */
 body {
   margin: 0 auto;
   max-width: auto;

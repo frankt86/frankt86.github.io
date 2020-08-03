@@ -10,17 +10,19 @@
 <h1> COVID 19 Scenes</h1>
 </header>
 <main>
-  <div id="scatter"></div>
+  <div id="bar_chart_simple"></div>
 </main>
 <aside>
   <div class="myDiv">
-    <h2>Cases by Countries with the Top 10 in Population</h2>
-    <p>COVID-19 Cases vary quite bit when looking at the top 10 most populated Countries.</p>
+    <h2>Total Deaths for Countries w/ Top 10 Population</h2>
+    <p>As you can see from the graph, </p>
+    </p>The United States is also leading the World in total COVID-19 Deaths.</p>
+
   </div>
 
 <a href="scene3.html"> 
   <button type="submit" class="button"
-  style="vertical-align:middle"><span>Scene 2</span>
+  style="vertical-align:middle"><span>Scene 3</span>
   </button>
   </a> 
 </aside>
@@ -28,82 +30,90 @@
 </body>
 <script>
 
+var margin = {top: 30, right: 30, bottom: 70, left: 60},
+    width = 560 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
 
-  var margin = {top: 10, right: 30, bottom: 30, left: 60},
-      width = 500 - margin.left - margin.right,
-      height = 420 - margin.top - margin.bottom;
-  
+var svg = d3.select("#bar_chart_simple")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
 
-  var svg = d3.select("#scatter")
-    .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-      .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+d3.csv("owid-covid-data.csv", function(data) {
 
-  d3.csv("owid-covid-data.csv", function(data) {
-  
+  data.sort(function(b, a) {
+    return a.total_deaths - b.total_deaths;
+  });
 
-    var x = d3.scaleLinear()
-      .domain([0, 160000])
-      .range([ 0, width ]);
-    svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
-  
+  var x = d3.scaleBand()
+    .range([ 0, width ])
+    .domain(data.map(function(d) { return d.location; }))
+    .padding(0.2);
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+      .attr("transform", "translate(-10,0)rotate(-45)")
+      .style("text-anchor", "end");
 
-    var y = d3.scaleLinear()
-      .domain([0, 5000000])
-      .range([ height, 0]);
-    svg.append("g")
-      .call(d3.axisLeft(y));
+  var y = d3.scaleLinear()
+    .domain([0, 160000])
+    .range([ height, 0]);
+  svg.append("g")
+    .call(d3.axisLeft(y));
 
-    var tooltip = d3.select("#scatter")
-      .append("div")
+    var topData = data.sort(function(a, b) {
+    return d3.descending(+a.total_deaths, +b.total_deaths);
+}).slice(0, 10);
+ 
+  var Tooltip = d3.select("#bar_chart_simple")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "#590C0C")
+    .style("border", "solid")
+    .style("border-width", "2px")
+    .style("border-radius", "5px")
+    .style("padding", "5px")
+
+  var mouseover = function(d) {
+    Tooltip
+      .style("opacity", 1)
+    d3.select(this)
+      .style("stroke", "black")
+      .style("opacity", 1)
+  }
+  var mousemove = function(d) {
+    Tooltip
+      .html("There are a total of : " + d3.format(',')(d.total_deaths) + " Deaths")
+
+      .style("left", (d3.mouse(this)[0]+70) + "px")
+      .style("top", (d3.mouse(this)[1]) + "px")
+  }
+  var mouseleave = function(d) {
+    Tooltip
       .style("opacity", 0)
-      .attr("class", "tooltip")
-      .style("background-color", "#590C0C")
-      .style("border", "solid")
-      .style("border-width", "1px")
-      .style("border-radius", "5px")
-      .style("padding", "10px")
-  
+    d3.select(this)
+      .style("stroke", "none")
+      .style("opacity", 0.8)
+  }
 
-    var mouseover = function(d) {
-      tooltip
-        .style("opacity", 1)
-    }
-  
-    var mousemove = function(d) {
-      tooltip
-        .html("Country: "+d.location+"<br>Total Cases: " + d.total_cases+"<br>Total Deaths: "+d.total_deaths+"<br>Total Population: "+d.population)
-        .style("left", (d3.mouse(this)[0]+90) + "px")
-        .style("top", (d3.mouse(this)[1]) + "px")
-    }
+  svg.selectAll("mybar")
+    .data(topData)
+    .enter()
+    .append("rect")
+      .attr("x", function(d) { return x(d.location); })
+      .attr("y", function(d) { return y(d.total_deaths); })
+      .attr("width", x.bandwidth())
+      .attr("height", function(d) { return height - y(d.total_deaths); })
+      .attr("fill", "#590C0C")
 
-    var mouseleave = function(d) {
-      tooltip
-        .transition()
-        .duration(200)
-        .style("opacity", 0)
-    }
+      .on("mouseover", mouseover)
+      .on("mousemove", mousemove)
+      .on("mouseleave", mouseleave)
 
-    svg.append('g')
-      .selectAll("dot")
-      .data(data.filter(function(d,i){return i<5000000}))
-      .enter()
-      .append("circle")
-        .attr("cx", function (d) { return x(d.total_deaths); } )
-        .attr("cy", function (d) { return y(d.total_cases); } )
-        .attr("r", 7)
-        .style("fill", "#590C0C")
-        .style("opacity", 0.3)
-        .style("stroke", "white")
-      .on("mouseover", mouseover )
-      .on("mousemove", mousemove )
-      .on("mouseleave", mouseleave )
-  
-  })
-  
-  </script>
+})
+</script>

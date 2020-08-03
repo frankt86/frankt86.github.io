@@ -14,8 +14,10 @@
 </main>
 <aside>
   <div class="myDiv">
-    <h2>Cases by Countries with the Top 10 in Population</h2>
-    <p>COVID-19 Cases vary quite bit when looking at the top 10 most populated Countries.</p>
+    <h2>Total Cases with Countries of Top 10 Population</h2>
+    <p>As you can see from the graph, </p>
+    <p>The United States is leading the World in total COVID-19 Cases.</p>
+
   </div>
 
 <a href="scene2.html"> 
@@ -27,12 +29,11 @@
 </footer>
 </body>
 <script>
-// set the dimensions and margins of the graph
+
 var margin = {top: 30, right: 30, bottom: 70, left: 60},
     width = 560 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-// append the svg object to the body of the page
 var svg = d3.select("#bar_chart")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -41,15 +42,12 @@ var svg = d3.select("#bar_chart")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 
-// Parse the Data
 d3.csv("owid-covid-data.csv", function(data) {
 
-  // sort data
   data.sort(function(b, a) {
     return a.total_cases - b.total_cases;
   });
 
-  // X axis
   var x = d3.scaleBand()
     .range([ 0, width ])
     .domain(data.map(function(d) { return d.location; }))
@@ -61,7 +59,6 @@ d3.csv("owid-covid-data.csv", function(data) {
       .attr("transform", "translate(-10,0)rotate(-45)")
       .style("text-anchor", "end");
 
-  // Add Y axis
   var y = d3.scaleLinear()
     .domain([0, 5000000])
     .range([ height, 0]);
@@ -91,7 +88,7 @@ d3.csv("owid-covid-data.csv", function(data) {
   }
   var mousemove = function(d) {
     Tooltip
-      .html("This Country has " + d3.format(',')(d.total_cases) + " cases and a total population of " + d3.format(',')(d.population)+".")
+      .html("There are a total of " + d3.format(',')(d.total_cases) + " Cases")
 
       .style("left", (d3.mouse(this)[0]+70) + "px")
       .style("top", (d3.mouse(this)[1]) + "px")
