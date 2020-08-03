@@ -18,9 +18,9 @@
     <p>COVID-19 Cases vary quite bit when looking at the top 10 most populated Countries.</p>
   </div>
 
-<a href="test3.html"> 
+<a href="scene2.html"> 
   <button type="submit" class="button"
-  style="vertical-align:middle"><span>Scene 3</span>
+  style="vertical-align:middle"><span>Scene 2</span>
   </button>
   </a> 
 </aside>
@@ -82,8 +82,8 @@ d3.csv("owid-covid-data.csv", function(data) {
       .attr("width", x.bandwidth())
       .attr("height", function(d) { return height - y(d.total_cases); })
       .attr("fill", "#590C0C")
-      .attr("height", function(d) { return height - y(0); }) // always equal to 0
-    .attr("y", function(d) { return y(0); })
+      .attr("height", function(d) { return height - y(0); })
+      .attr("y", function(d) { return y(0); })
 
 // Animation
 svg.selectAll("rect")
