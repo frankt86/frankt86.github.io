@@ -78,7 +78,7 @@
   
     var mousemove = function(d) {
       tooltip
-        .html("Country: "+d.location+"<br>Total Cases: " + d.total_cases+"<br>Total Deaths: "+d.total_deaths+"<br>Total Population: "+d.population+"<br>Fatality Rate: "+d.total_rate)
+        .html("Country: "+d.location+"<br>Total Cases: " + d3.format(',')(d.total_cases)+"<br>Total Deaths: "+d3.format(',')(d.total_deaths)+"<br>Total Population: "+d3.format(',')(d.population)+"<br>Fatality Rate: "+d.total_rate)
         .style("left", (d3.mouse(this)[0]+90) + "px")
         .style("top", (d3.mouse(this)[1]) + "px")
     }
