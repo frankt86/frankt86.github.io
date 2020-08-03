@@ -10,7 +10,7 @@
 <h1> COVID 19 Scenes</h1>
 </header>
 <main>
-  <div id="bubble"></div>
+  <div id="scatter"></div>
 </main>
 <aside>
   <div class="myDiv">
@@ -28,58 +28,82 @@
 </body>
 <script>
 
-  // set the dimensions and margins of the graph
-  var margin = {top: 10, right: 20, bottom: 50, left: 50},
+
+  var margin = {top: 10, right: 30, bottom: 30, left: 60},
       width = 500 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom;
+      height = 420 - margin.top - margin.bottom;
   
-  // append the svg object to the body of the page
-  var svg = d3.select("#bubble")
+
+  var svg = d3.select("#scatter")
     .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
       .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
-  
-  //Read the data
+
   d3.csv("owid-covid-data.csv", function(data) {
   
-    // Add X axis
+
     var x = d3.scaleLinear()
-      .domain([0, 5000000])
+      .domain([0, 160000])
       .range([ 0, width ]);
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x))
-    .selectAll("text")
-      .attr("transform", "translate(-10,0)rotate(-45)")
-      .style("text-anchor", "end");
+      .call(d3.axisBottom(x));
   
-    // Add Y axis
+
     var y = d3.scaleLinear()
-      .domain([600, 160000])
+      .domain([0, 5000000])
       .range([ height, 0]);
     svg.append("g")
       .call(d3.axisLeft(y));
-  
-    // Add a scale for bubble size
-    var z = d3.scaleLinear()
-    .domain([200000, 1310000000])
-    .range([ 1, 40]);
 
-    // Add dots
+    var tooltip = d3.select("#scatter")
+      .append("div")
+      .style("opacity", 0)
+      .attr("class", "tooltip")
+      .style("background-color", "#590C0C")
+      .style("border", "solid")
+      .style("border-width", "1px")
+      .style("border-radius", "5px")
+      .style("padding", "10px")
+  
+
+    var mouseover = function(d) {
+      tooltip
+        .style("opacity", 1)
+    }
+  
+    var mousemove = function(d) {
+      tooltip
+        .html("Country: "+d.location+"<br>Total Cases: " + d.total_cases+"<br>Total Deaths: "+d.total_deaths+"<br>Total Population: "+d.population)
+        .style("left", (d3.mouse(this)[0]+90) + "px")
+        .style("top", (d3.mouse(this)[1]) + "px")
+    }
+
+    var mouseleave = function(d) {
+      tooltip
+        .transition()
+        .duration(200)
+        .style("opacity", 0)
+    }
+
     svg.append('g')
       .selectAll("dot")
-      .data(data)
+      .data(data.filter(function(d,i){return i<5000000}))
       .enter()
       .append("circle")
-        .attr("cx", function (d) { return x(d.total_cases); } )
-        .attr("cy", function (d) { return y(d.population); } )
-        .attr("r", function (d) { return z(d.total_deaths); } )
-        .style("fill", "black")
-        .style("opacity", "0.7")
-        .attr("stroke", "black")
-        
+        .attr("cx", function (d) { return x(d.total_deaths); } )
+        .attr("cy", function (d) { return y(d.total_cases); } )
+        .attr("r", 7)
+        .style("fill", "#590C0C")
+        .style("opacity", 0.3)
+        .style("stroke", "white")
+      .on("mouseover", mouseover )
+      .on("mousemove", mousemove )
+      .on("mouseleave", mouseleave )
+  
   })
+  
   </script>
