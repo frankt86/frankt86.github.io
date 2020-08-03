@@ -123,6 +123,24 @@ svg.selectAll("rect")
   .attr("y", function(d) { return y(d.total_cases); })
   .attr("height", function(d) { return height - y(d.total_cases); })
   .delay(function(d,i){console.log(i) ; return(i*100)})
+  
+   svg.append("line")
+      .style("stroke", "black")
+      .style("stroke-width", 2)
+      .style("stroke-dasharray", "5,5")
+      .attr("x1", 0)
+      .attr("y1", 29)
+      .attr("x2", 500)
+      .attr("y2", 29);
+
+    svg.append("text")
+      .attr("transform",
+            "translate(" + (250) + " ," + (43) + ")")
+      .style("text-anchor", "middle")
+      .style("stroke", "Black")
+      .style("font-size", ".8em")
+      .text("United States's Cases: 4,620,4444");
+
 
 })
 </script>
