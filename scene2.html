@@ -115,6 +115,23 @@ d3.csv("owid-covid-data.csv", function(data) {
       .on("mouseover", mouseover)
       .on("mousemove", mousemove)
       .on("mouseleave", mouseleave)
+  
+      svg.append("line")
+      .style("stroke", "black")
+      .style("stroke-width", 2)
+      .style("stroke-dasharray", "5,5")
+      .attr("x1", 0)
+      .attr("y1", 15)
+      .attr("x2", 500)
+      .attr("y2", 15);
+
+    svg.append("text")
+      .attr("transform",
+            "translate(" + (250) + " ," + (30) + ")")
+      .style("text-anchor", "middle")
+      .style("stroke", "Black")
+      .style("font-size", ".8em")
+      .text("United States's Deaths: 154,447");
 
 })
 </script>
